@@ -5,11 +5,6 @@ from typing import Dict
 
 import allure
 
-from typing import TYPE_CHECKING
-
-if TYPE_CHECKING:
-    from pages.dashboard_page import DashboardPage
-
 from utils.yaml_loader import load_yaml
 from pages.base_page import BasePage
 
@@ -22,8 +17,8 @@ class AuthPage(BasePage):
     """
 
     LOCATORS_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "locators", "auth_page.yaml")
-    URL_PATH = "login"
-    REQUIRED_LOCATORS = ("username_input", "password_input", "login_button")
+    url_fragment = "/login"
+    required_locators = ("username_input", "password_input", "login_button")
 
     def __init__(self, driver, base_url: str):
         """
@@ -32,16 +27,6 @@ class AuthPage(BasePage):
         """
         super().__init__(driver, base_url)
         self.locators: Dict[str, dict] = load_yaml(self.LOCATORS_PATH)
-
-    @allure.step("Убедиться, что открыта страница авторизации")
-    def ensure_opened(self) -> None:
-        """
-        Проверяет, что открыта именно страница логина:
-          - URL содержит /login;
-          - видны поля Email, Password и кнопка Sign in.
-        """
-        self.wait_url_contains(self.URL_PATH, timeout=40)
-        self.ensure_locators_present(*self.REQUIRED_LOCATORS, timeout=40)
 
     @allure.step("Открыть страницу авторизации")
     def open_login_page(self) -> None:
@@ -53,7 +38,7 @@ class AuthPage(BasePage):
         self.ensure_opened()
 
     @allure.step("Авторизоваться с валидными кредами")
-    def login(self, login: str, password: str) -> "DashboardPage":
+    def login(self, login: str, password: str):
         """
         Полный сценарий логина с валидными данными.
 
@@ -61,8 +46,6 @@ class AuthPage(BasePage):
         :param password: Пароль.
         :return: Экземпляр DashboardPage после успешного входа.
         """
-        # локальный импорт, чтобы не было циклических зависимостей
-        from pages.dashboard_page import DashboardPage
 
         self.open_login_page()
         self.fill_credentials(login, password)
@@ -144,6 +127,7 @@ class AuthPage(BasePage):
             "email": self.has_email_warning(),
             "password": self.has_password_warning(),
         }
+
 
     def resolve_credentials(
         self,

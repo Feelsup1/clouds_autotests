@@ -23,6 +23,9 @@ class BasePage:
     и добавления скриншотов в Allure.
     """
 
+    url_fragment: str | None = None
+    required_locators: tuple[str, ...] = ()
+
     def __init__(self, driver: WebDriver, base_url: str):
         """
         :param driver: Экземпляр WebDriver.
@@ -30,6 +33,17 @@ class BasePage:
         """
         self.driver = driver
         self.base_url = base_url.rstrip("/") + "/"
+
+    @allure.step("Убедиться, что открыта правильная страница")
+    def ensure_opened(self, timeout: int = 30) -> None:
+        """
+        Базовая реализация: ждём фрагмент URL и набор ключевых локаторов.
+        Дочерние классы должны задать url_fragment и required_locators.
+        """
+        if self.url_fragment:
+            self.wait_url_contains(self.url_fragment, timeout=timeout)
+        if self.required_locators:
+            self.ensure_locators_present(*self.required_locators, timeout=timeout)
 
     def open(self, path: str = "") -> None:
         """
