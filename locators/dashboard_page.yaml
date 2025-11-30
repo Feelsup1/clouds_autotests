@@ -1,0 +1,18 @@
+
+sidebar_menu:
+  by: "xpath"
+  value: '//*[@aria-label="Servers.com"]/..'
+
+current_balance:
+  by: "xpath"
+  value: "//div[.//text()[contains(.,'Current balance')]]"
+
+# Кнопка открытия меню пользователя (аватар/профиль) в шапке после логина.
+user_menu_button:
+  by: "xpath"
+  value: "//button[.//span[contains(normalize-space(),'@servers.com')]]"
+
+# Пункт Logout в меню пользователя.
+logout_button:
+  by: "xpath"
+  value: "//button[.//span[normalize-space()='Logout']]"

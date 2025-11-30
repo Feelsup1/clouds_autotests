@@ -1,0 +1,58 @@
+# locators/account_settings.yaml
+
+# Блок Subscriptions на странице Account settings.
+subscriptions_block:
+  by: "xpath"
+  value: "//section[ .//h1[normalize-space()='Subscriptions'] \
+                    or .//h2[normalize-space()='Subscriptions'] \
+                    or contains(@data-testid,'subscriptions') ]"
+
+# Кнопка "Add contact".
+add_contact_button:
+  by: "xpath"
+  value: "//button[ normalize-space()='Add contact' or normalize-space()='Add Contact' \
+           or .//span[normalize-space()='Add contact' or normalize-space()='Add Contact'] \
+           or contains(@data-testid,'add-contact') ]"
+
+# Поле имени контакта.
+contact_name_input:
+  by: "xpath"
+  value: "//input[ contains(@name,'name') or contains(@id,'name') \
+           or @placeholder='Name' or @placeholder='Full name' ]"
+
+# Поле email контакта.
+contact_email_input:
+  by: "xpath"
+  value: "//input[ @type='email' or contains(@name,'email') or contains(@id,'email') \
+           or @placeholder='Email' ]"
+
+# Поле телефона контакта.
+contact_phone_input:
+  by: "xpath"
+  value: "//input[ @type='tel' or contains(@name,'phone') or contains(@id,'phone') \
+           or contains(@placeholder,'phone') or contains(@placeholder,'Phone') ]"
+
+# Кнопка сохранения контакта.
+contact_save_button:
+  by: "xpath"
+  value: "//button[ normalize-space()='Save' or .//span[normalize-space()='Save'] \
+           or contains(@data-testid,'save-contact') ]"
+
+# Кнопка редактирования контакта в таблице.
+contact_edit_button:
+  by: "xpath"
+  value: "//button[ (normalize-space()='Edit' or @aria-label='Edit' or contains(@data-testid,'edit-contact')) \
+           and ancestor::table ]"
+
+# Кнопка удаления контакта в таблице.
+contact_delete_button:
+  by: "xpath"
+  value: "//button[ (normalize-space()='Delete' or @aria-label='Delete' \
+                     or contains(@data-testid,'delete-contact') or contains(@class,'danger')) \
+           and ancestor::table ]"
+
+# Любая строка таблицы контактов.
+contact_row:
+  by: "xpath"
+  value: "//table[ contains(@class,'contact') or contains(@class,'subscription') \
+                or @data-testid='contacts-table'] //tr[.//td]"

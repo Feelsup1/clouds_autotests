@@ -199,3 +199,25 @@ class BasePage:
             except WebDriverException:
                 self._attach_screenshot("click_if_present_error")
                 raise
+
+    def wait_url_contains(self, fragment: str, timeout: int = 10) -> None:
+        """
+        Ждёт, пока в текущем URL появится указанный фрагмент.
+
+        :param fragment: Подстрока, которая должна быть в URL.
+        :param timeout: Таймаут ожидания.
+        """
+        with allure.step(f"Дождаться, что URL содержит '{fragment}'"):
+            wait_for(self.driver, EC.url_contains(fragment), timeout)
+
+    def ensure_locators_present(self, *locator_keys: str, timeout: int = 10) -> None:
+        """
+        Проверяет, что на странице присутствуют указанные локаторы.
+
+        :param locator_keys: Имена локаторов из self.locators.
+        :param timeout: Таймаут ожидания для каждого.
+        """
+        for key in locator_keys:
+            locator = self.locators[key]
+            with allure.step(f"Проверить наличие элемента '{key}'"):
+                self.find(locator, timeout)

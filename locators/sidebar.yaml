@@ -1,0 +1,14 @@
+# locators/sidebar.yaml
+
+# Все ссылки бокового меню.
+sidebar_links:
+  by: "xpath"
+  value: "//aside[contains(@class,'sidebar') or @data-testid='sidebar']//a[normalize-space()] \
+          | //nav[@role='navigation']//a[normalize-space()]"
+
+# Пункт меню для перехода в настройки/подписки.
+subscriptions_menu_item:
+  by: "xpath"
+  value: "//a[ (contains(@href,'/account/settings') or contains(@href,'/account/subscriptions') \
+             or contains(normalize-space(),'Account settings') or contains(normalize-space(),'Subscriptions')) \
+           and (ancestor::aside or ancestor::nav)]"

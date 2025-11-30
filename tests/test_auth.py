@@ -1,4 +1,3 @@
-
 # file: tests/test_auth.py
 import logging
 
@@ -6,6 +5,7 @@ import pytest
 import allure
 
 from pages.auth_page import AuthPage
+from pages.dashboard_page import DashboardPage
 
 log = logging.getLogger(__name__)
 
@@ -74,28 +74,22 @@ class TestAuth:
       - Классы эквивалентности (валидные / невалидные креды, неверный формат email).
       - Анализ граничных значений (пустые строки, слишком длинный логин).
     """
-    @pytest.mark.positive
-    @allure.story("Успешный логин и логаут")
-    @allure.title("Позитив: валидный логин/пароль -> успешный вход и выход")
+
     def test_login_logout_positive(self, driver, base_url, credentials):
         page = AuthPage(driver, base_url)
 
         with allure.step("Авторизоваться валидным пользователем"):
             page.login(credentials["login"], credentials["password"])
 
-        with allure.step("Проверить, что меню пользователя доступно"):
-            assert page.is_element_present(
-                page.locators["user_menu_button"]
-            ), "Ожидалось наличие меню пользователя после успешного логина"
+        with allure.step("Убедиться, что дашборд открыт"):
+            dashboard = DashboardPage(driver, base_url)
+            dashboard.ensure_opened()
 
         with allure.step("Выполнить логаут"):
-            page.logout()
+            page.logout()  # или dashboard.logout(), если перенесёшь туда
 
-        with allure.step("Проверить, что мы вернулись на страницу логина"):
-            assert page.is_element_present(
-                page.locators["username_input"]
-            ), "Поле логина должно быть видно после логаута"
-            assert "/login" in driver.current_url, "После логаута должны быть на /login"
+        with allure.step("Проверить, что снова открыта страница авторизации"):
+            page.ensure_opened()
 
     @pytest.mark.negative
     @allure.story("Невалидная авторизация")
@@ -116,10 +110,8 @@ class TestAuth:
         """
         page = AuthPage(driver, base_url)
 
-        # Красивый заголовок в Allure для каждого набора
         allure.dynamic.title(expect["title"])
 
-        # 🔥 Никаких if/else в тесте — всё внутри POM
         login, password = page.resolve_credentials(
             login_input=login_input,
             password_input=password_input,

@@ -5,6 +5,11 @@ from typing import Dict
 
 import allure
 
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pages.dashboard_page import DashboardPage
+
 from utils.yaml_loader import load_yaml
 from pages.base_page import BasePage
 
@@ -17,6 +22,8 @@ class AuthPage(BasePage):
     """
 
     LOCATORS_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "locators", "auth_page.yaml")
+    URL_PATH = "login"
+    REQUIRED_LOCATORS = ("username_input", "password_input", "login_button")
 
     def __init__(self, driver, base_url: str):
         """
@@ -26,24 +33,40 @@ class AuthPage(BasePage):
         super().__init__(driver, base_url)
         self.locators: Dict[str, dict] = load_yaml(self.LOCATORS_PATH)
 
+    @allure.step("Убедиться, что открыта страница авторизации")
+    def ensure_opened(self) -> None:
+        """
+        Проверяет, что открыта именно страница логина:
+          - URL содержит /login;
+          - видны поля Email, Password и кнопка Sign in.
+        """
+        self.wait_url_contains(self.URL_PATH, timeout=40)
+        self.ensure_locators_present(*self.REQUIRED_LOCATORS, timeout=40)
+
     @allure.step("Открыть страницу авторизации")
     def open_login_page(self) -> None:
         """
-        Открывает страницу логина и, если нужно, принимает cookies.
-
-        Проверки:
-          - страница загрузилась;
-          - поле ввода логина (email) стало доступно.
+        Открывает страницу логина и убеждается, что она загрузилась.
         """
-        self.open("login")
-
-        # Сначала пытаемся закрыть баннер cookies (если он есть)
+        self.open('login')
         self.accept_cookies_if_present()
+        self.ensure_opened()
 
-        # ✅ Критично: даём странице больше времени дорисовать форму логина.
-        # На портале login-форма подгружается не мгновенно, поэтому ставим,
-        # например, 30 секунд.
-        self.find(self.locators["username_input"], timeout=30)
+    @allure.step("Авторизоваться с валидными кредами")
+    def login(self, login: str, password: str) -> "DashboardPage":
+        """
+        Полный сценарий логина с валидными данными.
+
+        :param login: Имя пользователя.
+        :param password: Пароль.
+        :return: Экземпляр DashboardPage после успешного входа.
+        """
+        # локальный импорт, чтобы не было циклических зависимостей
+        from pages.dashboard_page import DashboardPage
+
+        self.open_login_page()
+        self.fill_credentials(login, password)
+        self.submit_login()
 
     @allure.step("Принять cookies, если баннер отображается")
     def accept_cookies_if_present(self) -> None:
@@ -56,7 +79,7 @@ class AuthPage(BasePage):
             log.info("Локатор cookies_accept_button не задан, ничего не делаем")
             return
 
-        self.click_if_present(locator, timeout=5)
+        self.click_if_present(locator, timeout=20)
 
     @allure.step("Ввести логин и пароль")
     def fill_credentials(self, login: str, password: str) -> None:
@@ -75,18 +98,6 @@ class AuthPage(BasePage):
         Нажимает на кнопку логина.
         """
         self.click(self.locators["login_button"])
-
-    @allure.step("Авторизоваться с валидными кредами")
-    def login(self, login: str, password: str) -> None:
-        """
-        Полный сценарий логина с валидными данными.
-
-        :param login: Имя пользователя.
-        :param password: Пароль.
-        """
-        self.open_login_page()
-        self.fill_credentials(login, password)
-        self.submit_login()
 
     @allure.step("Открыть меню пользователя")
     def open_user_menu(self) -> None:
@@ -154,5 +165,3 @@ class AuthPage(BasePage):
         login = credentials["login"] if login_input is None else login_input
         password = credentials["password"] if password_input is None else password_input
         return login, password
-
-
