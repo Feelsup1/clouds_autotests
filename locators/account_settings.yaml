@@ -1,58 +1,81 @@
-# locators/account_settings.yaml
+# file: locators/account_settings.yaml
 
-# Блок Subscriptions на странице Account settings.
-subscriptions_block:
+# --- Общие элементы Account settings / Subscriptions ---
+
+
+# Таблица / список контактов Subscriptions
+subscriptions_table:
   by: "xpath"
-  value: "//section[ .//h1[normalize-space()='Subscriptions'] \
-                    or .//h2[normalize-space()='Subscriptions'] \
-                    or contains(@data-testid,'subscriptions') ]"
+  value: "//span[normalize-space(text())='Subscriptions']/ancestor::*[@role='region'][1]"
 
-# Кнопка "Add contact".
+# Кнопка "Add contact"
 add_contact_button:
   by: "xpath"
-  value: "//button[ normalize-space()='Add contact' or normalize-space()='Add Contact' \
-           or .//span[normalize-space()='Add contact' or normalize-space()='Add Contact'] \
-           or contains(@data-testid,'add-contact') ]"
+  value: "//*[@title='Create']"
 
-# Поле имени контакта.
+
+# --- Страница создания / редактирования контакта (/account/new-contact) ---
+
+# Заголовок страницы создания контакта
+new_contact_header:
+  by: "xpath"
+  value: "//h1[contains(.,'New contact') or contains(.,'Add contact') or contains(.,'Subscription contact')]"
+
 contact_name_input:
   by: "xpath"
-  value: "//input[ contains(@name,'name') or contains(@id,'name') \
-           or @placeholder='Name' or @placeholder='Full name' ]"
+  value: "//label[normalize-space()='Name']/following::input[1] | //input[@placeholder='Name' or contains(@name,'name') or contains(@id,'name')]"
 
-# Поле email контакта.
 contact_email_input:
   by: "xpath"
-  value: "//input[ @type='email' or contains(@name,'email') or contains(@id,'email') \
-           or @placeholder='Email' ]"
+  value: "//input[@name='email']"
 
-# Поле телефона контакта.
 contact_phone_input:
   by: "xpath"
-  value: "//input[ @type='tel' or contains(@name,'phone') or contains(@id,'phone') \
-           or contains(@placeholder,'phone') or contains(@placeholder,'Phone') ]"
+  value: "//input[contains(@name,'phone')]"
 
-# Кнопка сохранения контакта.
+contact_company_input:
+  by: "xpath"
+  value: "//label[normalize-space()='Company']/following::input[1] | //input[contains(@name,'company') or contains(@id,'company')]"
+
+contact_role_input:
+  by: "xpath"
+  value: "//label[normalize-space()='Role']/following::input[1] | //input[contains(@name,'role') or contains(@id,'role')]"
+
+# Чекбокс роли (Primary / Technical / Billing / Abuse / Emergency) по тексту.
+# {role} будет подставляться в коде: Primary, Technical, Billing, Abuse, Emergency.
+job_role_checkbox_by_label:
+  by: "xpath"
+  value: "//label[contains(normalize-space(.), '{role}')]"
+
+
+contact_notes_textarea:
+  by: "xpath"
+  value: "//label[normalize-space()='Notes']/following::textarea[1] | //textarea[contains(@name,'notes') or contains(@id,'notes')]"
+
 contact_save_button:
   by: "xpath"
-  value: "//button[ normalize-space()='Save' or .//span[normalize-space()='Save'] \
-           or contains(@data-testid,'save-contact') ]"
+  value: "//button[normalize-space()='Create' or .//span[normalize-space()='Create']] | 
+  //button[normalize-space()='Save' or .//span[normalize-space()='Save']]"
 
-# Кнопка редактирования контакта в таблице.
-contact_edit_button:
-  by: "xpath"
-  value: "//button[ (normalize-space()='Edit' or @aria-label='Edit' or contains(@data-testid,'edit-contact')) \
-           and ancestor::table ]"
 
-# Кнопка удаления контакта в таблице.
-contact_delete_button:
-  by: "xpath"
-  value: "//button[ (normalize-space()='Delete' or @aria-label='Delete' \
-                     or contains(@data-testid,'delete-contact') or contains(@class,'danger')) \
-           and ancestor::table ]"
+# --- Элементы в строке таблицы контактов (динамический XPATH собираем в коде) ---
 
-# Любая строка таблицы контактов.
-contact_row:
+# Общий XPATH для строки по email (шаблон, {email} подставляется в коде)
+contact_row_by_email:
   by: "xpath"
-  value: "//table[ contains(@class,'contact') or contains(@class,'subscription') \
-                or @data-testid='contacts-table'] //tr[.//td]"
+  value: "//a[starts-with(@href,'mailto:') and normalize-space()='{email}']"
+
+# Кнопка редактирования в строке контакта (относительный XPATH)
+contact_info_edit_button:
+  by: "xpath"
+  value: ".//button[contains(@data-testid,'edit') or normalize-space()='Edit' or .//span[normalize-space()='Edit']]"
+
+# Кнопка удаления в строке контакта (относительный XPATH)
+contact_delete_button_in_row:
+  by: "xpath"
+  value: ".//button[contains(@data-testid,'delete') or normalize-space()='Delete' or .//span[normalize-space()='Delete']]"
+
+# Кнопка подтверждения удаления (диалог)
+confirm_delete_button:
+  by: "xpath"
+  value: "//button[normalize-space()='Delete' or normalize-space()='Confirm' or .//span[normalize-space()='Delete']]"

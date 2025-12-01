@@ -1,11 +1,12 @@
 # file: pages/base_page.py
 import os
 import logging
-from typing import Tuple
+from typing import Tuple, Dict
 
 import allure
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -141,26 +142,43 @@ class BasePage:
                 self._attach_screenshot("click_error")
                 raise
 
-    def type(self, locator: dict, text: str, timeout: int = 10, clear: bool = True) -> None:
+    def clear_input(self, locator: Dict[str, str], timeout: int = 10) -> None:
         """
-        Вводит текст в поле ввода.
+        Жёстко очищает поле ввода (input/textarea), даже если оно с маской.
 
-        :param locator: Словарь локатора из YAML.
-        :param text: Вводимый текст.
-        :param timeout: Таймаут ожидания.
-        :param clear: Нужно ли предварительно очистить поле.
+        1) кликаем в поле
+        2) Ctrl+A
+        3) Delete
         """
-        by, value = self._to_by(locator)
-        with allure.step(f"Ввод текста '{text}' в поле: {by}={value}"):
-            log.info(f"Ввод текста в элемент: by={by}, value={value}, text={text}")
+        by, value = locator["by"], locator["value"]
+        log.info(f"Очистка поля: by={by}, value={value}")
+
+        element = wait_for(self.driver, EC.element_to_be_clickable((by, value)), timeout)
+        element.send_keys(Keys.CONTROL, "a")
+        element.send_keys(Keys.DELETE)
+
+    @allure.step("Ввести текст в поле")
+    def type(self, locator: Dict[str, str], text: str, timeout: int = 10, clear: bool = True) -> None:
+        """
+        Вводит текст в элемент (input/textarea).
+
+        :param locator: словарь с ключами "by" и "value".
+        :param text: текст, который нужно ввести.
+        :param timeout: таймаут ожидания видимости элемента.
+        :param clear: если True — перед вводом очистить поле.
+        """
+        by, value = locator["by"], locator["value"]
+        log.info(f"Ввод текста в элемент: by={by}, value={value}, text={text}")
+
+        element = wait_for(self.driver, EC.visibility_of_element_located((by, value)), timeout)
+
+        if clear:
             try:
-                element = wait_for(self.driver, EC.visibility_of_element_located((by, value)), timeout)
-                if clear:
-                    element.clear()
-                element.send_keys(text)
-            except (TimeoutException, WebDriverException):
-                self._attach_screenshot("type_error")
-                raise
+                element.clear()
+            except Exception as e:
+                log.warning(f"Не удалось очистить поле перед вводом: {e}")
+
+        element.send_keys(text)
 
     def get_text(self, locator: dict, timeout: int = 10) -> str:
         """
