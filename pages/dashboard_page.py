@@ -1,7 +1,6 @@
 # file: pages/dashboard_page.py
 import os
 from typing import Dict
-import allure
 
 from pages.base_page import BasePage
 from utils.yaml_loader import load_yaml

@@ -4,7 +4,7 @@ import logging
 from typing import Dict, Optional
 
 import allure
-from selenium.common.exceptions import TimeoutException, NoSuchElementException
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 
@@ -26,6 +26,7 @@ class AccountSettingsPage(BasePage):
       - удалить контакт;
       - проверить наличие контакта.
     """
+
     JOB_ROLES = ("Primary", "Technical", "Billing", "Abuse", "Emergency")
 
     LOCATORS_PATH = os.path.join(
@@ -92,8 +93,8 @@ class AccountSettingsPage(BasePage):
         """
         # Основные текстовые поля
         self.type(self.locators["contact_name_input"], contact["name"])
-        self.type(self.locators["contact_email_input"], '')
-        self.type(self.locators["contact_phone_input"], '')
+        self.type(self.locators["contact_email_input"], "")
+        self.type(self.locators["contact_phone_input"], "")
         self.type(self.locators["contact_email_input"], contact["email"])
         self.type(self.locators["contact_phone_input"], contact["phone"])
         self.type(self.locators["contact_company_input"], contact["company"])
@@ -133,7 +134,6 @@ class AccountSettingsPage(BasePage):
             # кликаем только если состояние отличается от желаемого
             if is_checked != should_be_checked:
                 label_el.click()
-
 
     @allure.step("Создать контакт в Subscriptions")
     def create_contact(self, contact: Dict[str, str]) -> None:
@@ -275,14 +275,18 @@ class AccountSettingsPage(BasePage):
 
         :param email: Email контакта.
         """
-        _, delete_button = self._find_row_and_button(email, "contact_delete_button_in_row")
+        _, delete_button = self._find_row_and_button(
+            email, "contact_delete_button_in_row"
+        )
         delete_button.click()
 
         # подтверждение в диалоге (если есть)
         try:
             self.click(self.locators["confirm_delete_button"])
         except TimeoutException:
-            log.info("Кнопка подтверждения удаления не найдена, возможно, удаление без диалога")
+            log.info(
+                "Кнопка подтверждения удаления не найдена, возможно, удаление без диалога"
+            )
 
         assert not self.is_contact_present(email, timeout=10), (
             f"Контакт с email {email} не должен отображаться после удаления"

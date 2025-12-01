@@ -16,9 +16,9 @@ log = logging.getLogger(__name__)
 # menu_key          — ключ локатора в locators/sidebar.yaml
 # url_fragment      — фрагмент URL, который должен появиться после перехода
 SIDEBAR_ITEMS = [
-    pytest.param("ssl_certificates_menu",    "/ssl",              id="SSL certificates"),
-    pytest.param("account_settings_menu",    "/account",          id="Account settings"),
-    pytest.param("requests_menu",            "/requests",         id="Requests"),
+    pytest.param("ssl_certificates_menu", "/ssl", id="SSL certificates"),
+    pytest.param("account_settings_menu", "/account", id="Account settings"),
+    pytest.param("requests_menu", "/requests", id="Requests"),
 ]
 
 

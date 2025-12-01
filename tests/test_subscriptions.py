@@ -76,7 +76,9 @@ class TestSubscriptions:
 
     @pytest.mark.positive
     @allure.title("Subscriptions: добавление контакта с заполнением всех полей")
-    def test_add_subscription_contact_positive(self, subscriptions_page: AccountSettingsPage):
+    def test_add_subscription_contact_positive(
+        self, subscriptions_page: AccountSettingsPage
+    ):
         """
         Шаги:
           1. Открыть Account settings → Subscriptions.
@@ -88,7 +90,9 @@ class TestSubscriptions:
         suffix = uuid.uuid4().hex[:8]
         contact = _make_contact_data(suffix)
 
-        with allure.step("Удалить контакт, если он уже существует (идемпотентность теста)"):
+        with allure.step(
+            "Удалить контакт, если он уже существует (идемпотентность теста)"
+        ):
             subscriptions_page.delete_contact_if_exists(contact["email"])
 
         with allure.step("Создать новый контакт"):
@@ -101,7 +105,9 @@ class TestSubscriptions:
 
     @pytest.mark.positive
     @allure.title("Subscriptions: редактирование существующего контакта")
-    def test_edit_subscription_contact_positive(self, subscriptions_page: AccountSettingsPage):
+    def test_edit_subscription_contact_positive(
+        self, subscriptions_page: AccountSettingsPage
+    ):
         """
         Шаги:
           1. Создать тестовый контакт (если его ещё нет).
@@ -127,4 +133,6 @@ class TestSubscriptions:
 
         with allure.step("Проверить, что контакт обновлён"):
             contact_row = subscriptions_page.get_contact(updated["email"])
-            assert contact_row is not None, "Контакт должен существовать после редактирования"
+            assert contact_row is not None, (
+                "Контакт должен существовать после редактирования"
+            )

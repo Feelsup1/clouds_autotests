@@ -1,5 +1,4 @@
 # file: pages/base_page.py
-import os
 import logging
 from typing import Tuple, Dict
 
@@ -11,7 +10,6 @@ from selenium.common.exceptions import TimeoutException, WebDriverException
 from selenium.webdriver.support import expected_conditions as EC
 
 from utils.wait import wait_for
-
 
 log = logging.getLogger(__name__)
 
@@ -104,7 +102,9 @@ class BasePage:
         by, value = self._to_by(locator)
         log.debug(f"Ожидание элемента: by={by}, value={value}")
         try:
-            return wait_for(self.driver, EC.visibility_of_element_located((by, value)), timeout)
+            return wait_for(
+                self.driver, EC.visibility_of_element_located((by, value)), timeout
+            )
         except TimeoutException:
             self._attach_screenshot("element_not_found")
             raise
@@ -120,7 +120,9 @@ class BasePage:
         by, value = self._to_by(locator)
         log.debug(f"Ожидание списка элементов: by={by}, value={value}")
         try:
-            return wait_for(self.driver, EC.presence_of_all_elements_located((by, value)), timeout)
+            return wait_for(
+                self.driver, EC.presence_of_all_elements_located((by, value)), timeout
+            )
         except TimeoutException:
             self._attach_screenshot("elements_not_found")
             raise
@@ -136,7 +138,9 @@ class BasePage:
         with allure.step(f"Клик по элементу: {by}={value}"):
             log.info(f"Клик по элементу: by={by}, value={value}")
             try:
-                element = wait_for(self.driver, EC.element_to_be_clickable((by, value)), timeout)
+                element = wait_for(
+                    self.driver, EC.element_to_be_clickable((by, value)), timeout
+                )
                 element.click()
             except (TimeoutException, WebDriverException):
                 self._attach_screenshot("click_error")
@@ -153,12 +157,16 @@ class BasePage:
         by, value = locator["by"], locator["value"]
         log.info(f"Очистка поля: by={by}, value={value}")
 
-        element = wait_for(self.driver, EC.element_to_be_clickable((by, value)), timeout)
+        element = wait_for(
+            self.driver, EC.element_to_be_clickable((by, value)), timeout
+        )
         element.send_keys(Keys.CONTROL, "a")
         element.send_keys(Keys.DELETE)
 
     @allure.step("Ввести текст в поле")
-    def type(self, locator: Dict[str, str], text: str, timeout: int = 10, clear: bool = True) -> None:
+    def type(
+        self, locator: Dict[str, str], text: str, timeout: int = 10, clear: bool = True
+    ) -> None:
         """
         Вводит текст в элемент (input/textarea).
 
@@ -170,7 +178,9 @@ class BasePage:
         by, value = locator["by"], locator["value"]
         log.info(f"Ввод текста в элемент: by={by}, value={value}, text={text}")
 
-        element = wait_for(self.driver, EC.visibility_of_element_located((by, value)), timeout)
+        element = wait_for(
+            self.driver, EC.visibility_of_element_located((by, value)), timeout
+        )
 
         if clear:
             try:
@@ -219,9 +229,13 @@ class BasePage:
         """
         by, value = self._to_by(locator)
         with allure.step(f"Клик по элементу (если есть): {by}={value}"):
-            log.info(f"Пробуем кликнуть (если есть) по элементу: by={by}, value={value}")
+            log.info(
+                f"Пробуем кликнуть (если есть) по элементу: by={by}, value={value}"
+            )
             try:
-                element = wait_for(self.driver, EC.element_to_be_clickable((by, value)), timeout)
+                element = wait_for(
+                    self.driver, EC.element_to_be_clickable((by, value)), timeout
+                )
                 element.click()
                 log.info("Элемент найден и нажат")
                 return True

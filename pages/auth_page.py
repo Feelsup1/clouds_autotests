@@ -16,7 +16,9 @@ class AuthPage(BasePage):
     Page Object для страницы авторизации и логаута.
     """
 
-    LOCATORS_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "locators", "auth_page.yaml")
+    LOCATORS_PATH = os.path.join(
+        os.path.dirname(os.path.dirname(__file__)), "locators", "auth_page.yaml"
+    )
     url_fragment = "/login"
     required_locators = ("username_input", "password_input", "login_button")
 
@@ -33,7 +35,7 @@ class AuthPage(BasePage):
         """
         Открывает страницу логина и убеждается, что она загрузилась.
         """
-        self.open('login')
+        self.open("login")
         self.accept_cookies_if_present()
         self.ensure_opened()
 
@@ -102,7 +104,9 @@ class AuthPage(BasePage):
         :param timeout: Таймаут ожидания иконки ошибки.
         :return: True, если иконка отображается, иначе False.
         """
-        return self.is_element_present(self.locators["email_error_icon"], timeout=timeout)
+        return self.is_element_present(
+            self.locators["email_error_icon"], timeout=timeout
+        )
 
     def has_password_warning(self, timeout: int = 2) -> bool:
         """
@@ -111,7 +115,9 @@ class AuthPage(BasePage):
         :param timeout: Таймаут ожидания иконки ошибки.
         :return: True, если иконка отображается, иначе False.
         """
-        return self.is_element_present(self.locators["password_error_icon"], timeout=timeout)
+        return self.is_element_present(
+            self.locators["password_error_icon"], timeout=timeout
+        )
 
     def get_login_errors(self) -> dict:
         """
@@ -127,7 +133,6 @@ class AuthPage(BasePage):
             "email": self.has_email_warning(),
             "password": self.has_password_warning(),
         }
-
 
     def resolve_credentials(
         self,
