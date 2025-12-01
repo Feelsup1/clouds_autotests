@@ -1,14 +1,11 @@
-# locators/sidebar.yaml
-
-# Все ссылки бокового меню.
-sidebar_links:
+ssl_certificates_menu:
   by: "xpath"
-  value: "//aside[contains(@class,'sidebar') or @data-testid='sidebar']//a[normalize-space()] \
-          | //nav[@role='navigation']//a[normalize-space()]"
+  value: "//a[contains(@href, '/ssl')]"
 
-# Пункт меню для перехода в настройки/подписки.
-subscriptions_menu_item:
+account_settings_menu:
   by: "xpath"
-  value: "//a[ (contains(@href,'/account/settings') or contains(@href,'/account/subscriptions') \
-             or contains(normalize-space(),'Account settings') or contains(normalize-space(),'Subscriptions')) \
-           and (ancestor::aside or ancestor::nav)]"
+  value: "//a[contains(@href, '/account')]"
+
+requests_menu:
+  by: "xpath"
+  value: "//a[contains(@href, '/requests')]"

@@ -67,14 +67,8 @@ NEGATIVE_AUTH_CASES = [
 
 @allure.feature("Авторизация")
 class TestAuth:
-    """
-    Набор тестов авторизации.
-
-    Техники тест-дизайна:
-      - Классы эквивалентности (валидные / невалидные креды, неверный формат email).
-      - Анализ граничных значений (пустые строки, слишком длинный логин).
-    """
-
+    @pytest.mark.positive
+    @allure.story("Невалидная авторизация")
     def test_login_logout_positive(self, driver, base_url, credentials):
         page = AuthPage(driver, base_url)
 
@@ -86,7 +80,7 @@ class TestAuth:
             dashboard.ensure_opened()
 
         with allure.step("Выполнить логаут"):
-            page.logout()  # или dashboard.logout(), если перенесёшь туда
+            page.logout()
 
         with allure.step("Проверить, что снова открыта страница авторизации"):
             page.ensure_opened()
@@ -143,5 +137,3 @@ class TestAuth:
 
         with allure.step("Проверить, что остаёмся на /login"):
             assert "/login" in driver.current_url, "Не должны уходить с /login при неуспешной авторизации"
-
-

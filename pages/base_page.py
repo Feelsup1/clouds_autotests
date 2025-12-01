@@ -35,7 +35,7 @@ class BasePage:
         self.base_url = base_url.rstrip("/") + "/"
 
     @allure.step("Убедиться, что открыта правильная страница")
-    def ensure_opened(self, timeout: int = 30) -> None:
+    def ensure_opened(self, timeout: int = 40) -> None:
         """
         Базовая реализация: ждём фрагмент URL и набор ключевых локаторов.
         Дочерние классы должны задать url_fragment и required_locators.

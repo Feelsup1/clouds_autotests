@@ -49,7 +49,7 @@ def credentials() -> dict:
     return {"login": login, "password": password}
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def driver() -> webdriver.Chrome:
     """
     Фикстура инициализирует WebDriver и закрывает его по завершении сессии.

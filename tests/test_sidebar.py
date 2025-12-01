@@ -5,42 +5,65 @@ import pytest
 import allure
 
 from pages.auth_page import AuthPage
-from pages.sidebar import Sidebar
-
+from pages.sidebar_page import SidebarPage
 
 log = logging.getLogger(__name__)
+
+# Тестовые данные для пунктов бокового меню.
+# Здесь мы показываем:
+#   * EC (Equivalence Classes) — каждый пункт меню как отдельный класс.
+#
+# menu_key          — ключ локатора в locators/sidebar.yaml
+# url_fragment      — фрагмент URL, который должен появиться после перехода
+SIDEBAR_ITEMS = [
+    pytest.param("ssl_certificates_menu",    "/ssl",              id="SSL certificates"),
+    pytest.param("account_settings_menu",    "/account",          id="Account settings"),
+    pytest.param("requests_menu",            "/requests",         id="Requests"),
+]
 
 
 @allure.feature("Боковое меню")
 class TestSidebar:
     """
-    Тесты бокового меню.
+    Тесты на работоспособность левого бокового меню.
 
-    Техника: выбор представительных значений из классов эквивалентности
-    (каждый пункт меню как отдельный класс).
+    Техники тест-дизайна:
+      * EC (классы эквивалентности): каждый пункт меню как отдельный класс.
     """
 
     @pytest.mark.positive
-    @pytest.mark.smoke
-    @allure.story("Кликабельность пунктов меню")
-    @allure.title("Позитив: все пункты бокового меню кликабельны")
-    def test_sidebar_items_clickable(self, driver, base_url, credentials):
+    @allure.story("Навигация по каждому пункту бокового меню (EC)")
+    @pytest.mark.parametrize("menu_key,url_fragment", SIDEBAR_ITEMS)
+    def test_sidebar_navigation(
+        self,
+        driver,
+        base_url,
+        credentials,
+        menu_key,
+        url_fragment,
+    ):
         """
+        Позитивный параметризованный тест (EC):
+
         Шаги:
           1. Авторизоваться валидным пользователем.
-          2. Убедиться, что боковое меню отображается.
-          3. Последовательно кликнуть по всем пунктам меню.
-          4. Проверить, что каждый клик не приводит к ошибке JS/HTTP (упрощённо — тест проходит).
+          2. Кликнуть по пункту бокового меню.
+          3. Проверить, что:
+             - текущий URL содержит ожидаемый фрагмент;
         """
         auth_page = AuthPage(driver, base_url)
-        sidebar = Sidebar(driver, base_url)
 
-        with allure.step("Авторизоваться"):
+        with allure.step("Авторизоваться валидным пользователем"):
             auth_page.login(credentials["login"], credentials["password"])
 
-        with allure.step("Проверить наличие пунктов меню"):
-            items = sidebar.get_sidebar_items()
-            assert items, "Ожидались пункты бокового меню"
+        sidebar = SidebarPage(driver, base_url)
 
-        with allure.step("Кликнуть по всем пунктам меню"):
-            sidebar.click_through_sidebar_items()
+        with allure.step(f"Открыть раздел через боковое меню: {menu_key}"):
+            sidebar.open_section(menu_key)
+
+        with allure.step("Проверить, что URL содержит ожидаемый фрагмент"):
+            current_url = driver.current_url
+            assert url_fragment in current_url, (
+                f"Ожидалось, что URL будет содержать '{url_fragment}', "
+                f"фактический URL: {current_url}"
+            )
