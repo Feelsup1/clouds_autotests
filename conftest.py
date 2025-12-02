@@ -57,8 +57,6 @@ def driver() -> webdriver.Chrome:
     :return: Экземпляр Selenium WebDriver.
     """
     options = Options()
-    # В реальной жизни тут можно включить headless и пр.
-    # options.add_argument("--headless=new")
     options.add_argument("--start-maximized")
 
     drv = webdriver.Chrome(options=options)

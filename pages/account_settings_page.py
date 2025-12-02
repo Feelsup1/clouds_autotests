@@ -5,7 +5,7 @@ from typing import Dict, Optional
 
 import allure
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.common.by import By
 
 from pages.base_page import BasePage
@@ -49,7 +49,7 @@ class AccountSettingsPage(BasePage):
         """
         Ждёт, пока в текущем URL появится указанный фрагмент.
         """
-        wait_for(self.driver, EC.url_contains(fragment), timeout)
+        wait_for(self.driver, ec.url_contains(fragment), timeout)
 
     # --- Навигация / проверка вкладки Subscriptions ---
 
@@ -92,17 +92,31 @@ class AccountSettingsPage(BasePage):
           - notes       (если хочешь заполнять большую textarea выше)
         """
         # Основные текстовые поля
-        self.type(self.locators["contact_name_input"], contact["name"])
-        self.type(self.locators["contact_email_input"], "")
+        self.type(self.locators["contact_first_name_input"], contact["first_name"])
+        self.type(self.locators["contact_middle_name_input"], contact["middle_name"])
+        self.type(self.locators["contact_last_name_input"], contact["last_name"])
+        self.type(self.locators["contact_nickname_input"], contact["nickname"])
+        self.type(self.locators["contact_comments_textarea"], contact["comments"])
         self.type(self.locators["contact_phone_input"], "")
+        self.type(self.locators["contact_email_input"], "")
+        self.type(self.locators["contact_email_input"], "")
         self.type(self.locators["contact_email_input"], contact["email"])
         self.type(self.locators["contact_phone_input"], contact["phone"])
         self.type(self.locators["contact_company_input"], contact["company"])
-        self.type(self.locators["contact_role_input"], contact["role"])
+        self.type(self.locators["contact_company_input"], contact["company"])
+        self.type(self.locators["contact_job_title_input"], contact["job_title"])
+        self.type(self.locators["contact_job_role_input"], contact["job_role"])
+        self.type(self.locators["contact_secondary_email_input"], '')
+        self.type(self.locators["contact_secondary_email_input"], '')
+        self.type(self.locators["contact_secondary_email_input"], contact["secondary_email"])
 
         # Чекбоксы Job role: Primary / Technical / Billing / Abuse / Emergency
         job_roles = contact.get("job_roles") or []
         self._set_job_roles(job_roles)
+
+
+
+
 
     def _set_job_roles(self, job_roles: list[str]) -> None:
         """

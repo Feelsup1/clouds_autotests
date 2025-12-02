@@ -79,3 +79,54 @@ contact_delete_button_in_row:
 confirm_delete_button:
   by: "xpath"
   value: "//button[normalize-space()='Delete' or normalize-space()='Confirm' or .//span[normalize-space()='Delete']]"
+
+
+
+
+contact_first_name_input:
+  by: "xpath"
+  value: "//label[normalize-space()='First name']/following::input[1] \
+          | //input[@name='first_name' or contains(@id,'firstName')]"
+
+contact_middle_name_input:
+  by: "xpath"
+  value: "//label[normalize-space()='Middle name']/following::input[1] \
+          | //input[@name='middle_name' or contains(@id,'middleName')]"
+
+contact_last_name_input:
+  by: "xpath"
+  value: "//label[normalize-space()='Last name']/following::input[1] \
+          | //input[@name='last_name' or contains(@id,'lastName')]"
+
+contact_nickname_input:
+  by: "xpath"
+  value: "//label[normalize-space()='Nickname']/following::input[1] \
+          | //input[@name='nickname' or contains(@id,'nickname')]"
+
+contact_comments_textarea:
+  by: "xpath"
+  value: "//label[normalize-space()='Comments']/following::textarea[1] \
+          | //textarea[contains(@name,'comment') or contains(@id,'comment')]"
+
+
+# --- Job role block: Company / Job title / Job role ---
+
+contact_job_title_input:
+  by: "xpath"
+  value: "//label[normalize-space()='Job title']/following::input[1] \
+          | //input[contains(@name,'job_title') or contains(@id,'jobTitle')]"
+
+# твой contact_role_input логично использовать как Job role,
+# при желании можешь добавить алиас:
+contact_job_role_input:
+  by: "xpath"
+  value: "//*[@placeholder='Enter job role']"
+
+
+# --- Contact details: Phone / Email / Secondary email ---
+
+# phone и email у тебя уже есть: contact_phone_input, contact_email_input
+
+contact_secondary_email_input:
+  by: "xpath"
+  value: "//*[@name='email2']"

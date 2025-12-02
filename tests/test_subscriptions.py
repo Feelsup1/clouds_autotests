@@ -18,17 +18,28 @@ def _make_contact_data(suffix: str) -> dict:
     Все поля заполнены валидными значениями (EC: класс валидных данных).
     """
     email = f"qa+subs_{suffix}@example.com"
+    company = f"Test Company {suffix}"
     return {
-        "name": f"QA Auto {suffix}",
-        "email": email,
+        # Блок Contact info – верхние поля
+        "first_name": f"QA Auto {suffix}",
+        "middle_name": f"Middle {suffix}",
+        "last_name": f"Sub {suffix}",
+        "nickname": f"Nick {suffix}",
+        "comments": f"Auto-created contact {suffix}",  # большое поле Comments
+
+        # Job role блок
+        "job_roles": ["Technical"],  # хотя бы одна роль обязательно
+        "company": company,
+        "job_title": f"QA Engineer {suffix}",
+        "job_role": "QA Engineer",
+
+        # Contact details
         "phone": "+1234567890",
-        "company": f"Test Company {suffix}",
-        # текстовое поле "Job role"
-        "role": "QA Engineer",
-        # чекбоксы Job role — хотя бы одна роль, чтобы не было ошибки
-        "job_roles": ["Technical"],
-        # если textarea с заметками есть — заполним
-        "notes": f"Auto-created contact {suffix}",
+        "email": email,
+        "secondary_email": f"secondary_{email}",
+
+        # Дополнительные заметки (если у тебя есть отдельный textarea под этим)
+        "notes": f"Notes for {suffix}",
     }
 
 
@@ -124,7 +135,7 @@ class TestSubscriptions:
                 subscriptions_page.create_contact(original)
 
         updated = dict(original)
-        updated["name"] = original["name"] + " UPDATED"
+        updated["first_name"] = original["first_name"] + " UPDATED"
         updated["phone"] = "+9876543210"
         updated["notes"] = f"{original['notes']} (edited)"
 
