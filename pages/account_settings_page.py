@@ -103,7 +103,6 @@ class AccountSettingsPage(BasePage):
         self.type(self.locators["contact_email_input"], contact["email"])
         self.type(self.locators["contact_phone_input"], contact["phone"])
         self.type(self.locators["contact_company_input"], contact["company"])
-        self.type(self.locators["contact_company_input"], contact["company"])
         self.type(self.locators["contact_job_title_input"], contact["job_title"])
         self.type(self.locators["contact_job_role_input"], contact["job_role"])
         self.type(self.locators["contact_secondary_email_input"], '')
@@ -289,22 +288,25 @@ class AccountSettingsPage(BasePage):
 
         :param email: Email контакта.
         """
-        _, delete_button = self._find_row_and_button(
-            email, "contact_delete_button_in_row"
-        )
-        delete_button.click()
+        self.click(self.locators["account_settings"])
+
+        delete_locator = self._make_delete_button_locator_for_email(email)
+        self.click(delete_locator)
 
         # подтверждение в диалоге (если есть)
         try:
             self.click(self.locators["confirm_delete_button"])
         except TimeoutException:
-            log.info(
-                "Кнопка подтверждения удаления не найдена, возможно, удаление без диалога"
-            )
+            log.info("Диалог подтверждения не появился — возможно, удаление без диалога")
 
         assert not self.is_contact_present(email, timeout=10), (
             f"Контакт с email {email} не должен отображаться после удаления"
         )
+
+    def _make_delete_button_locator_for_email(self, email: str) -> dict:
+        template = self.locators["contact_delete_button_by_email"]["value"]
+        xpath = template.format(email=email)
+        return {"by": "xpath", "value": xpath}
 
     @allure.step("Удалить контакт, если он существует: {email}")
     def delete_contact_if_exists(self, email: str) -> None:

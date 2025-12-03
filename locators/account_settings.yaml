@@ -130,3 +130,11 @@ contact_job_role_input:
 contact_secondary_email_input:
   by: "xpath"
   value: "//*[@name='email2']"
+
+account_settings:
+  by: "xpath"
+  value: "//span[normalize-space(text())='Account settings']"
+
+contact_delete_button_by_email:
+  by: "xpath"
+  value: "//a[starts-with(@href,'mailto:') and normalize-space()='{email}']/ancestor::tr[1]//button"

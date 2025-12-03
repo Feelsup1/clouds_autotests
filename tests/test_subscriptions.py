@@ -147,3 +147,41 @@ class TestSubscriptions:
             assert contact_row is not None, (
                 "Контакт должен существовать после редактирования"
             )
+
+
+    @pytest.mark.positive
+    @allure.title("Subscriptions: удаление существующего контакта")
+    def test_delete_subscription_contact_positive(
+        self, subscriptions_page: AccountSettingsPage
+    ):
+        """
+        Шаги:
+          1. Убедиться, что тестовый контакт существует
+             (если нет — создать его).
+          2. Удалить контакт через блок Subscriptions.
+          3. Проверить, что контакт больше не отображается в списке.
+
+        Техники тест-дизайна:
+          * EC — валидный полностью заполненный контакт как исходное состояние.
+          * Idempotent action — перед запуском/повторным запуском тест сам
+            приводит систему в нужное состояние.
+        """
+        # генерим уникальный контакт
+        suffix = uuid.uuid4().hex[:8]
+        contact = _make_contact_data(suffix)
+
+        with allure.step("Убедиться, что тестовый контакт существует"):
+            if not subscriptions_page.is_contact_present(contact["email"]):
+                subscriptions_page.create_contact(contact)
+
+        with allure.step("Удалить контакт из блока Subscriptions"):
+            subscriptions_page.delete_contact(contact["email"])
+
+        with allure.step("Проверить, что контакт отсутствует в списке"):
+            assert not subscriptions_page.is_contact_present(
+                contact["email"], timeout=5
+            ), f"Контакт с email {contact['email']} не должен отображаться после удаления"
+
+        # опционально: второй вызов для проверки идемпотентности окружения
+        with allure.step("Проверить, что повторное удаление безопасно (идемпотентность)"):
+            subscriptions_page.delete_contact_if_exists(contact["email"])
