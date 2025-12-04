@@ -146,8 +146,8 @@ venv\Scripts\activate               # Windows PowerShell/cmd
 pip install -r requirements.txt
 
 # задать учётные данные через переменные окружения
-set PORTAL_LOGIN=day+test2@servers.com
-set PORTAL_PASSWORD=pef2cxp8dqj_tcq_XTW
+export PORTAL_LOGIN=day+test2@servers.com
+export PORTAL_PASSWORD=pef2cxp8dqj_tcq_XTW
 
 # прогнать все тесты
 pytest -v --alluredir=allure-results
