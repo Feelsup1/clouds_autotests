@@ -1,0 +1,140 @@
+# file: locators/account_settings.yaml
+
+# --- Общие элементы Account settings / Subscriptions ---
+
+
+# Таблица / список контактов Subscriptions
+subscriptions_table:
+  by: "xpath"
+  value: "//span[normalize-space(text())='Subscriptions']/ancestor::*[@role='region'][1]"
+
+# Кнопка "Add contact"
+add_contact_button:
+  by: "xpath"
+  value: "//*[@title='Create']"
+
+
+# --- Страница создания / редактирования контакта (/account/new-contact) ---
+
+# Заголовок страницы создания контакта
+new_contact_header:
+  by: "xpath"
+  value: "//h1[contains(.,'New contact') or contains(.,'Add contact') or contains(.,'Subscription contact')]"
+
+contact_name_input:
+  by: "xpath"
+  value: "//label[normalize-space()='Name']/following::input[1] | //input[@placeholder='Name' or contains(@name,'name') or contains(@id,'name')]"
+
+contact_email_input:
+  by: "xpath"
+  value: "//input[@name='email']"
+
+contact_phone_input:
+  by: "xpath"
+  value: "//input[contains(@name,'phone')]"
+
+contact_company_input:
+  by: "xpath"
+  value: "//label[normalize-space()='Company']/following::input[1] | //input[contains(@name,'company') or contains(@id,'company')]"
+
+contact_role_input:
+  by: "xpath"
+  value: "//label[normalize-space()='Role']/following::input[1] | //input[contains(@name,'role') or contains(@id,'role')]"
+
+# Чекбокс роли (Primary / Technical / Billing / Abuse / Emergency) по тексту.
+# {role} будет подставляться в коде: Primary, Technical, Billing, Abuse, Emergency.
+job_role_checkbox_by_label:
+  by: "xpath"
+  value: "//label[contains(normalize-space(.), '{role}')]"
+
+
+contact_notes_textarea:
+  by: "xpath"
+  value: "//label[normalize-space()='Notes']/following::textarea[1] | //textarea[contains(@name,'notes') or contains(@id,'notes')]"
+
+contact_save_button:
+  by: "xpath"
+  value: "//button[normalize-space()='Create' or .//span[normalize-space()='Create']] | 
+  //button[normalize-space()='Save' or .//span[normalize-space()='Save']]"
+
+
+# --- Элементы в строке таблицы контактов (динамический XPATH собираем в коде) ---
+
+# Общий XPATH для строки по email (шаблон, {email} подставляется в коде)
+contact_row_by_email:
+  by: "xpath"
+  value: "//a[starts-with(@href,'mailto:') and normalize-space()='{email}']"
+
+# Кнопка редактирования в строке контакта (относительный XPATH)
+contact_info_edit_button:
+  by: "xpath"
+  value: ".//button[contains(@data-testid,'edit') or normalize-space()='Edit' or .//span[normalize-space()='Edit']]"
+
+# Кнопка удаления в строке контакта (относительный XPATH)
+contact_delete_button_in_row:
+  by: "xpath"
+  value: ".//button[contains(@data-testid,'delete') or normalize-space()='Delete' or .//span[normalize-space()='Delete']]"
+
+# Кнопка подтверждения удаления (диалог)
+confirm_delete_button:
+  by: "xpath"
+  value: "//button[normalize-space()='Delete' or normalize-space()='Confirm' or .//span[normalize-space()='Delete']]"
+
+
+
+
+contact_first_name_input:
+  by: "xpath"
+  value: "//label[normalize-space()='First name']/following::input[1] \
+          | //input[@name='first_name' or contains(@id,'firstName')]"
+
+contact_middle_name_input:
+  by: "xpath"
+  value: "//label[normalize-space()='Middle name']/following::input[1] \
+          | //input[@name='middle_name' or contains(@id,'middleName')]"
+
+contact_last_name_input:
+  by: "xpath"
+  value: "//label[normalize-space()='Last name']/following::input[1] \
+          | //input[@name='last_name' or contains(@id,'lastName')]"
+
+contact_nickname_input:
+  by: "xpath"
+  value: "//label[normalize-space()='Nickname']/following::input[1] \
+          | //input[@name='nickname' or contains(@id,'nickname')]"
+
+contact_comments_textarea:
+  by: "xpath"
+  value: "//label[normalize-space()='Comments']/following::textarea[1] \
+          | //textarea[contains(@name,'comment') or contains(@id,'comment')]"
+
+
+# --- Job role block: Company / Job title / Job role ---
+
+contact_job_title_input:
+  by: "xpath"
+  value: "//label[normalize-space()='Job title']/following::input[1] \
+          | //input[contains(@name,'job_title') or contains(@id,'jobTitle')]"
+
+# твой contact_role_input логично использовать как Job role,
+# при желании можешь добавить алиас:
+contact_job_role_input:
+  by: "xpath"
+  value: "//*[@placeholder='Enter job role']"
+
+
+# --- Contact details: Phone / Email / Secondary email ---
+
+# phone и email у тебя уже есть: contact_phone_input, contact_email_input
+
+contact_secondary_email_input:
+  by: "xpath"
+  value: "//*[@name='email2']"
+
+account_settings:
+  by: "xpath"
+  value: "//span[normalize-space(text())='Account settings']"
+
+contact_delete_button_by_email:
+  by: "xpath"
+  value: "//a[starts-with(@href,'mailto:') and normalize-space()='{email}']/ancestor::tr[1]//button"

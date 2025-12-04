@@ -1,0 +1,15 @@
+.pytest_cache/
+__pycache__/
+
+# IDE / PyCharm project files
+.idea/
+workspace.xml
+shelf/
+
+# Project logs and allure reports
+allure-results/
+logs/
+
+# Optional: venv if exists
+venv/
+.env/

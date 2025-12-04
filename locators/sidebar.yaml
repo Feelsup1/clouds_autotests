@@ -1,0 +1,11 @@
+ssl_certificates_menu:
+  by: "xpath"
+  value: "//a[contains(@href, '/ssl')]"
+
+account_settings_menu:
+  by: "xpath"
+  value: "//a[contains(@href, '/account')]"
+
+requests_menu:
+  by: "xpath"
+  value: "//a[contains(@href, '/requests')]"

@@ -1,0 +1,48 @@
+# locators/auth_page.yaml
+
+# Поле Email на форме логина.
+username_input:
+  by: "xpath"
+  value: "//input[@type='email' or contains(@name,'email') or contains(@id,'email')]"
+
+# Поле Password на форме логина.
+password_input:
+  by: "xpath"
+  value: "//input[@type='password' or contains(@name,'password') or contains(@id,'password')]"
+
+# Кнопка "Sign in" (вход).
+login_button:
+  by: "xpath"
+  value: "//button[normalize-space()='Sign in' or .//span[normalize-space()='Sign in'] or contains(@data-testid,'login')]"
+
+# Кнопка открытия меню пользователя (аватар/профиль) в шапке после логина.
+user_menu_button:
+  by: "xpath"
+  value: "//button[.//span[contains(normalize-space(),'@servers.com')]]"
+
+# Пункт Logout в меню пользователя.
+logout_button:
+  by: "xpath"
+  value: "//button[.//span[normalize-space()='Logout']]"
+
+# Сообщение об ошибке логина (для негативных тестов).
+login_error_message:
+  by: "xpath"
+  value: '//*[@class="inetacy"]'
+
+# Кнопка "Allow all" на баннере Cookiebot.
+cookies_accept_button:
+  by: "xpath"
+  value: "//button[@id='CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll' \
+           or normalize-space()='Allow all' \
+           or contains(@data-cookiebanner,'accept')]"
+
+# Иконка-варнинг у поля Email
+email_error_icon:
+  by: "xpath"
+  value: "//input[@type='email']/following-sibling::span[contains(@class,'inetacy')]"
+
+# Иконка-варнинг у поля Password
+password_error_icon:
+  by: "xpath"
+  value: "//input[@type='password']/following-sibling::span[contains(@class,'inetacy')]"
