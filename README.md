@@ -105,7 +105,7 @@ Page Object: `pages/account_settings_page.py`
 ## Структура проекта
 
 ```text
-clouds_autotests/
+servers_autotests/
 ├── pages/
 │   ├── base_page.py            # Общий базовый Page Object (open, click, type, find, waits, логирование)
 │   ├── auth_page.py            # Страница логина/логаута
@@ -137,8 +137,8 @@ clouds_autotests/
 ## Быстрый старт (как запустить тесты)
 
 ```bash
-git clone https://github.com/Feelsup1/clouds_autotests.git
-cd clouds_autotests
+git clone https://github.com/Feelsup1/servers_autotests.git
+cd servers_autotests
 git checkout tests                  # тестовое находится в ветке tests
 
 python -m venv venv
